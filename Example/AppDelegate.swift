@@ -32,20 +32,6 @@ class EpisodesViewController: UITableViewController {
         cell.textLabel?.text = episode.title
         return cell
     }
-
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let vc = segue.destination as? DetailViewController {
-            vc.episode = episodes[tableView.indexPathForSelectedRow!.row]
-        } else if let nc = segue.destination as? UINavigationController,
-            let pvc = nc.viewControllers.first as? ProfileViewController {
-            pvc.person = "My Name"
-        } else {
-            fatalError("unknown segue")
-        }
-    }
-    
-    @IBAction func unwindToHere(segue: UIStoryboardSegue) {
-    }
 }
 
 

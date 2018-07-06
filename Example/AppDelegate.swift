@@ -21,6 +21,12 @@ class ProfileViewController: UIViewController {
 
 class EpisodesViewController: UITableViewController {
     let episodes = [Episode(title: "Episode One"), Episode(title: "Episode Two"), Episode(title: "Episode Three")]
+    var didSelect: (Episode) -> () = { _ in }
+
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let episode = episodes[indexPath.row]
+        didSelect(episode)
+    }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return episodes.count

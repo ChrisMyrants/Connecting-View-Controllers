@@ -55,7 +55,17 @@ class DetailViewController: UIViewController {
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
-    private func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
+        let navigationController = window?.rootViewController as! UINavigationController
+        let episodesVC = navigationController.viewControllers[0] as! EpisodesViewController
+        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
+
+        episodesVC.didSelect = { episode in
+            let detailVC = storyboard.instantiateViewController(withIdentifier: "Detail") as! DetailViewController
+            detailVC.episode = episode
+            navigationController.pushViewController(detailVC, animated: true)
+        }
+
         return true
     }
 }

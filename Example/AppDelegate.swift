@@ -16,12 +16,17 @@ struct Episode {
 
 class ProfileViewController: UIViewController {
     var person: String = ""
+    var didTapDone: () -> () = {}
+    @IBAction func didTapDone(_ sender: UIBarButtonItem) {
+        didTapDone()
+    }
 }
 
 
 class EpisodesViewController: UITableViewController {
     let episodes = [Episode(title: "Episode One"), Episode(title: "Episode Two"), Episode(title: "Episode Three")]
     var didSelect: (Episode) -> () = { _ in }
+    var didTapProfile: () -> () = {}
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let episode = episodes[indexPath.row]
@@ -37,6 +42,9 @@ class EpisodesViewController: UITableViewController {
         let episode = episodes[indexPath.row]
         cell.textLabel?.text = episode.title
         return cell
+    }
+    @IBAction func didTapProfile(_ sender: UIBarButtonItem) {
+        didTapProfile()
     }
 }
 
@@ -64,6 +72,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let detailVC = storyboard.instantiateViewController(withIdentifier: "Detail") as! DetailViewController
             detailVC.episode = episode
             navigationController.pushViewController(detailVC, animated: true)
+        }
+        episodesVC.didTapProfile = {
+            let profileNC = storyboard.instantiateViewController(withIdentifier: "Profile") as! UINavigationController
+            let profileVC = profileNC.viewControllers[0] as! ProfileViewController
+            profileVC.didTapDone = {
+                navigationController.dismiss(animated: true, completion: nil)
+            }
+            navigationController.present(profileNC, animated: true, completion: nil)
         }
 
         return true

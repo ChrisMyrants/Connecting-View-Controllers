@@ -60,27 +60,34 @@ class DetailViewController: UIViewController {
 
 final class App {
     var window: UIWindow
+    var storyboard: UIStoryboard
+    var navigationController: UINavigationController
 
     init(window: UIWindow) {
         self.window = window
 
-        let navigationController = window.rootViewController as! UINavigationController
-        let episodesVC = navigationController.viewControllers[0] as! EpisodesViewController
-        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
+        navigationController = window.rootViewController as! UINavigationController
+        storyboard = UIStoryboard.init(name: "Main", bundle: nil)
 
-        episodesVC.didSelect = { episode in
-            let detailVC = storyboard.instantiateViewController(withIdentifier: "Detail") as! DetailViewController
-            detailVC.episode = episode
-            navigationController.pushViewController(detailVC, animated: true)
+        let episodesVC = navigationController.viewControllers[0] as! EpisodesViewController
+
+        episodesVC.didSelect = showEpisode
+        episodesVC.didTapProfile = showProfile
+    }
+
+    func showEpisode(_ episode: Episode) {
+        let detailVC = self.storyboard.instantiateViewController(withIdentifier: "Detail") as! DetailViewController
+        detailVC.episode = episode
+        navigationController.pushViewController(detailVC, animated: true)
+    }
+
+    func showProfile() {
+        let profileNC = self.storyboard.instantiateViewController(withIdentifier: "Profile") as! UINavigationController
+        let profileVC = profileNC.viewControllers[0] as! ProfileViewController
+        profileVC.didTapDone = {
+            self.navigationController.dismiss(animated: true, completion: nil)
         }
-        episodesVC.didTapProfile = {
-            let profileNC = storyboard.instantiateViewController(withIdentifier: "Profile") as! UINavigationController
-            let profileVC = profileNC.viewControllers[0] as! ProfileViewController
-            profileVC.didTapDone = {
-                navigationController.dismiss(animated: true, completion: nil)
-            }
-            navigationController.present(profileNC, animated: true, completion: nil)
-        }
+        self.navigationController.present(profileNC, animated: true, completion: nil)
     }
 }
 
